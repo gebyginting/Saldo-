@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Saldo+</string>
+    <string name="title_home">Home</string>
+    <string name="title_transaksi">Transaksi</string>
+    <string name="title_tambah">Tambah</string>
+    <string name="title_kategori">Kategori</string>
+    <string name="title_pengaturan">Pengaturan</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="kategori_array">
+        <item>Semua</item>
+        <item>Makanan</item>
+        <item>Transportasi</item>
+        <item>Hiburan</item>
+        <item>Gaji</item>
+    </string-array>
+
+    <string-array name="tanggal_filter_array">
+        <item>Hari Ini</item>
+        <item>Minggu Ini</item>
+        <item>Bulan Ini</item>
+    </string-array>
+
+    <string-array name="sort_array">
+        <item>Terbaru</item>
+        <item>Terlama</item>
+        <item>Nominal Tertinggi</item>
+        <item>Nominal Terendah</item>
+    </string-array>
+</resources>

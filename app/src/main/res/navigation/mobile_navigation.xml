@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.geby.saldo.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_transaksi"
+        android:name="com.geby.saldo.ui.transaksi.TransaksiFragment"
+        android:label="@string/title_transaksi"
+        tools:layout="@layout/fragment_transaksi" />
+
+    <fragment
+        android:id="@+id/navigation_tambah"
+        android:name="com.geby.saldo.ui.tambah.TambahFragment"
+        android:label="@string/title_tambah"
+        tools:layout="@layout/fragment_tambah" />
+
+    <fragment
+        android:id="@+id/navigation_kategori"
+        android:name="com.geby.saldo.ui.kategori.KategoriFragment"
+        android:label="@string/title_kategori"
+        tools:layout="@layout/fragment_kategori" />
+
+    <fragment
+        android:id="@+id/navigation_pengaturan"
+        android:name="com.geby.saldo.ui.pengaturan.PengaturanFragment"
+        android:label="@string/title_pengaturan"
+        tools:layout="@layout/fragment_pengaturan" />
+
+
+</navigation>

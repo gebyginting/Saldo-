@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_transaksi"
+        android:icon="@drawable/ic_transaksi"
+        android:title="@string/title_transaksi" />
+
+    <item
+        android:id="@+id/navigation_kategori"
+        android:icon="@drawable/ic_kategori"
+        android:title="@string/title_kategori" />
+
+    <item
+        android:id="@+id/navigation_pengaturan"
+        android:icon="@drawable/ic_pengaturan"
+        android:title="@string/title_pengaturan" />
+</menu>
