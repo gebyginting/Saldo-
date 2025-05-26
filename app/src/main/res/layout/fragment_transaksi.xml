@@ -7,18 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".ui.transaksi.TransaksiFragment">
 
-    <!-- Scrollable content -->
+    <!-- Konten scroll -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:layout_height="wrap_content">
 
-            <!-- 1. Judul -->
+            <!-- Judul -->
             <TextView
                 android:id="@+id/tvJudulTransaksi"
                 android:layout_width="wrap_content"
@@ -26,129 +27,131 @@
                 android:text="Riwayat Transaksi"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:paddingBottom="12dp" />
 
-            <!-- 2. Filter dan Sort -->
+            <!-- Spinner filter dan sort -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/layoutFilterSort"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3"
-                android:layout_marginVertical="16dp">
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/tvJudulTransaksi"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
                 <Spinner
                     android:id="@+id/spinnerKategori"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:entries="@array/kategori_array" />
-
-<!--                <Spinner-->
-<!--                    android:id="@+id/spinnerTanggal"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:entries="@array/tanggal_filter_array"-->
-<!--                    android:layout_marginStart="8dp"-->
-<!--                    android:layout_marginEnd="8dp" />-->
-
-                <Spinner
-                    android:id="@+id/spinnerSort"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/sort_array" />
-            </LinearLayout>
-
-            <!-- 3. Ringkasan -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_marginBottom="12dp">
-
-                <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardElevation="4dp"
-                    app:cardCornerRadius="12dp">
+                    android:entries="@array/kategori_array" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="12dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pemasukan"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/tvTotalPemasukan"
-                            android:text="Rp 0"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/green" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
+                <Spinner
+                    android:id="@+id/spinnerSort"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    app:cardElevation="4dp"
-                    app:cardCornerRadius="12dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="12dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pengeluaran"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/tvTotalPengeluaran"
-                            android:text="Rp 0"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/red" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                    android:entries="@array/sort_array" />
             </LinearLayout>
 
-            <!-- 4. RecyclerView Daftar Transaksi -->
+            <!-- Ringkasan Pemasukan -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardPemasukan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:layout_constraintTop_toBottomOf="@id/layoutFilterSort"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/cardPengeluaran">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pemasukan"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvTotalPemasukan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rp 0"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/green" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Ringkasan Pengeluaran -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardPengeluaran"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:layout_constraintTop_toBottomOf="@id/layoutFilterSort"
+                app:layout_constraintStart_toEndOf="@id/cardPemasukan"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pengeluaran"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvTotalPengeluaran"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rp 0"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/red" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTransaksi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="80dp" />
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardPemasukan" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- 5. Floating Action Button -->
+    <!-- FAB tetap di kanan bawah -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabTambahTransaksi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="32dp"
         android:contentDescription="Tambah Transaksi"
         android:src="@drawable/ic_tambah"
         app:tint="@android:color/white" />

@@ -1,14 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutKategori"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.kategori.KategoriFragment">
+    android:orientation="vertical"
+    android:background="@color/white">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Header -->
+
     <TextView
+        android:id="@+id/txtHeaderKategori"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="Kategori"
+        android:paddingBottom="12dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black" />
+    <!-- Optional Search Bar -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginHorizontal="2dp"
+        app:cardElevation="2dp"
+        app:cardCornerRadius="12dp">
 
-</FrameLayout>
+        <EditText
+            android:id="@+id/etSearchKategori"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Cari kategori..."
+            android:paddingStart="16dp"
+            android:background="@android:color/transparent"
+            android:inputType="text"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tambahKategori"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tambah kategori"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:layout_gravity="end"
+        android:textSize="16sp" />
+    <!-- RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvKategori"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_kategori" />
+
+</LinearLayout>
