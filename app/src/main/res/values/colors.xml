@@ -12,9 +12,9 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- Light Theme Colors -->
-    <color name="colorPrimary">#525ea1</color> <!-- Medium blue-purple -->
-    <color name="colorPrimaryVariant">#2D2D66</color> <!-- Dark accent -->
-    <color name="colorSecondary">#B2BDE9</color> <!-- Pastel blue -->
+    <color name="colorPrimary">#404763</color>
+    <color name="colorPrimaryVariant">#272F50</color> <!-- Dark accent -->
+    <color name="colorSecondary">#6F9AD5</color> <!-- Pastel blue -->
     <color name="colorOnPrimary">#FFFFFF</color> <!-- For text on primary -->
     <color name="colorBackground">#FFF4F4</color> <!-- Soft white-pink -->
     <color name="colorSurface">#FFFFFF</color> <!-- Card, bottom sheet -->

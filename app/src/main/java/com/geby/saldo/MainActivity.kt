@@ -14,7 +14,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
+    private val fragmentsWithBottomNav = setOf(
+        R.id.navigation_home,
+        R.id.navigation_transaksi,
+        R.id.navigation_tambah,
+        R.id.navigation_kategori,
+        R.id.navigation_pengaturan
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,8 +39,14 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        // Sembunyikan BottomNav di Splash, Onboarding, dll
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id in fragmentsWithBottomNav) {
+                navView.visibility = View.VISIBLE
+            } else {
+                navView.visibility = View.GONE
+            }
+        }
         navView.setupWithNavController(navController)
     }
 }
