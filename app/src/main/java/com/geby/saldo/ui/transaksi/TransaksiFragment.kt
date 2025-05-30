@@ -8,18 +8,27 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.geby.saldo.R
 import com.geby.saldo.data.adapter.TransactionAdapter
 import com.geby.saldo.data.model.Transaction
 import com.geby.saldo.data.model.TransactionType
 import com.geby.saldo.databinding.FragmentTransaksiBinding
+import com.geby.saldo.ui.viewmodel.TransactionViewModel
+import com.geby.saldo.ui.viewmodel.ViewModelFactory
+import kotlinx.coroutines.launch
 
 class TransaksiFragment : Fragment() {
 
     private var _binding: FragmentTransaksiBinding? = null
     private val binding get() = _binding!!
     private lateinit var transactionAdapter: TransactionAdapter
+    private val factory: ViewModelFactory by lazy { ViewModelFactory.getInstance(requireContext()) }
+    private val transaksiViewModel: TransactionViewModel by viewModels { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,14 +43,27 @@ class TransaksiFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.fabTambahTransaksi) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rvTransaksi) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(bottom = systemBars.bottom + 16) // kasih offset biar agak naik
+            view.updatePadding(bottom = systemBars.bottom) // kasih offset biar agak naik
             insets
         }
         setupRecyclerView()
-        loadSampleTransactions()
+        observeTransactions()
+//        loadSampleTransactions()
     }
+
+    private fun observeTransactions() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                transaksiViewModel.transactions.collect { list ->
+                    transactionAdapter = TransactionAdapter(list)
+                    binding.rvTransaksi.adapter = transactionAdapter
+                }
+            }
+        }
+    }
+
 
     private fun setupRecyclerView() {
         transactionAdapter = TransactionAdapter(emptyList())

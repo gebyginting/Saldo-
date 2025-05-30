@@ -10,6 +10,8 @@
     <color name="red">#F44336</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="lightGrey">#E0E0E0</color>
+
 
     <!-- Light Theme Colors -->
     <color name="colorPrimary">#404763</color>

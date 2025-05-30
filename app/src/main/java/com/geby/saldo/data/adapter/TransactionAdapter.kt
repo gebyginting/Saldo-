@@ -10,7 +10,7 @@ import com.geby.saldo.data.model.TransactionType
 import com.geby.saldo.databinding.ItemTransaksiBinding
 
 class TransactionAdapter(
-    private val transactions: List<Transaction>
+    val transactions: List<Transaction>
 ) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
     inner class TransactionViewHolder(val binding: ItemTransaksiBinding)

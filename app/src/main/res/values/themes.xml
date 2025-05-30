@@ -23,9 +23,9 @@
     </style>
 
     <style name="Widget.SaldoInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxCornerRadiusTopStart">25dp</item>
-        <item name="boxCornerRadiusTopEnd">25dp</item>
-        <item name="boxCornerRadiusBottomStart">25dp</item>
-        <item name="boxCornerRadiusBottomEnd">25dp</item>
+        <item name="boxCornerRadiusTopStart">15dp</item>
+        <item name="boxCornerRadiusTopEnd">15dp</item>
+        <item name="boxCornerRadiusBottomStart">15dp</item>
+        <item name="boxCornerRadiusBottomEnd">15dp</item>
     </style>
 </resources>
