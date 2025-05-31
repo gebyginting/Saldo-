@@ -17,9 +17,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.geby.saldo.R
 import com.geby.saldo.data.adapter.TransactionAdapter
+import com.geby.saldo.data.model.SortOption
 import com.geby.saldo.databinding.FragmentTransaksiBinding
 import com.geby.saldo.ui.viewmodel.TransactionViewModel
 import com.geby.saldo.ui.viewmodel.ViewModelFactory
+import com.geby.saldo.utils.Helper
 import kotlinx.coroutines.launch
 
 class TransaksiFragment : Fragment() {
@@ -50,7 +52,31 @@ class TransaksiFragment : Fragment() {
 
         setupRecyclerView()
         setupFilterSpinner()
+        setupSortSpinner()
         observeTransactions()
+    }
+
+    private fun setupSortSpinner() {
+        val sortOptions = resources.getStringArray(R.array.sort_array)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, sortOptions)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerSort.adapter = adapter
+
+        binding.spinnerSort.setSelection(0)
+        binding.spinnerSort.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selected = when (position) {
+                    0 -> SortOption.TERBARU
+                    1 -> SortOption.TERLAMA
+                    2 -> SortOption.NOMINAL_TERTINGGI
+                    3 -> SortOption.NOMINAL_TERENDAH
+                    else -> SortOption.TERBARU
+                }
+                transaksiViewModel.setSortOption(selected)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
     }
 
     private fun setupRecyclerView() {
@@ -67,8 +93,21 @@ class TransaksiFragment : Fragment() {
                 }
             }
         }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    transaksiViewModel.totalPemasukan.collect {
+                        binding.tvTotalPemasukan.text = Helper.formatRupiahTanpaKoma(it)
+                    }
+                }
+                launch {
+                    transaksiViewModel.totalPengeluaran.collect {
+                        binding.tvTotalPengeluaran.text = Helper.formatRupiahTanpaKoma(it)
+                    }
+                }
+            }
+        }
     }
-
 
     private fun setupFilterSpinner() {
         val kategoriArray = resources.getStringArray(R.array.kategori_array)
@@ -89,29 +128,8 @@ class TransaksiFragment : Fragment() {
         }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
-
-
-//private fun loadSampleTransactions() {
-//    val sampleList = listOf(
-//        Transaction(1, "Gaji Bulanan", "01 Mei 2025", 5000000.0, TransactionType.INCOME, R.drawable.ic_income),
-//        Transaction(2, "Makan Siang", "02 Mei 2025", 25000.0, TransactionType.EXPENSE, R.drawable.ic_food),
-//        Transaction(3, "Transport", "02 Mei 2025", 10000.0, TransactionType.EXPENSE, R.drawable.ic_transport),
-//        Transaction(1, "Gaji Bulanan", "01 Mei 2025", 5000000.0, TransactionType.INCOME, R.drawable.ic_income),
-//        Transaction(2, "Makan Siang", "02 Mei 2025", 25000.0, TransactionType.EXPENSE, R.drawable.ic_food),
-//        Transaction(3, "Transport", "02 Mei 2025", 10000.0, TransactionType.EXPENSE, R.drawable.ic_transport),
-//        Transaction(1, "Gaji Bulanan", "01 Mei 2025", 5000000.0, TransactionType.INCOME, R.drawable.ic_income),
-//        Transaction(2, "Makan Siang", "02 Mei 2025", 25000.0, TransactionType.EXPENSE, R.drawable.ic_food),
-//        Transaction(3, "Transport", "02 Mei 2025", 10000.0, TransactionType.EXPENSE, R.drawable.ic_transport),
-//        Transaction(1, "Gaji Bulanan", "01 Mei 2025", 5000000.0, TransactionType.INCOME, R.drawable.ic_income),
-//        Transaction(2, "Makan Siang", "02 Mei 2025", 25000.0, TransactionType.EXPENSE, R.drawable.ic_food),
-//        Transaction(3, "Transport", "02 Mei 2025", 10000.0, TransactionType.EXPENSE, R.drawable.ic_transport),
-//    )
-//    transactionAdapter = com.geby.saldo.data.adapter.TransactionAdapter(sampleList)
-//    binding.rvTransaksi.adapter = transactionAdapter
-//}

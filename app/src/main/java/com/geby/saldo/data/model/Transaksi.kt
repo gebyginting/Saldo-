@@ -34,3 +34,15 @@ enum class TransactionType {
     INCOME, EXPENSE
 }
 
+enum class SortOption {
+    TERBARU,
+    TERLAMA,
+    NOMINAL_TERTINGGI,
+    NOMINAL_TERENDAH;
+    companion object {
+        fun fromString(value: String): SortOption? {
+            return SortOption.entries.find { it.name.equals(value, ignoreCase = true) }
+        }
+    }
+}
+

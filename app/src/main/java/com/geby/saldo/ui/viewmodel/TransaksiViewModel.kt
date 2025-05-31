@@ -3,6 +3,7 @@ package com.geby.saldo.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.geby.saldo.data.model.SortOption
 import com.geby.saldo.data.model.Transaction
 import com.geby.saldo.data.model.TransactionCategory
 import com.geby.saldo.data.pref.UserPreference
@@ -19,20 +20,38 @@ class TransactionViewModel(
     private val repository: TransaksiRepository,
     userPreference: UserPreference
 ) : ViewModel() {
+    private val _kategoriFilter = MutableStateFlow<TransactionCategory?>(null)
+    private val kategoriFilter: StateFlow<TransactionCategory?> = _kategoriFilter
 
+    private val _sortOption = MutableStateFlow(SortOption.TERBARU)
+    val sortOption: StateFlow<SortOption> = _sortOption
+
+    //    filter berdasarkan kategori
     val transactions: StateFlow<List<Transaction>> = repository.semuaTransaksi
         .map { it -> it.sortedByDescending { it.date } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _kategoriFilter = MutableStateFlow<TransactionCategory?>(null)
-    private val kategoriFilter: StateFlow<TransactionCategory?> = _kategoriFilter
-
     val filteredTransactions: StateFlow<List<Transaction>> = combine(
-        transactions, kategoriFilter
-    ) { list, kategori ->
-        if (kategori == null) list
-        else list.filter { it.category == kategori }
+        transactions,
+        _kategoriFilter,
+        _sortOption
+    ) { transactions, kategori, sortOption ->
+        var filtered = if (kategori == null) {
+            transactions
+        } else {
+            transactions.filter { it.category == kategori }
+        }
+
+        filtered = when (sortOption) {
+            SortOption.TERBARU -> filtered.sortedByDescending { it.date }
+            SortOption.TERLAMA -> filtered.sortedBy { it.date }
+            SortOption.NOMINAL_TERTINGGI -> filtered.sortedByDescending { it.amount }
+            SortOption.NOMINAL_TERENDAH -> filtered.sortedBy { it.amount }
+        }
+
+        filtered
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
 
     fun setKategoriFilter(kategoriStr: String) {
         // Kalau pilih "Semua" berarti null (tidak pakai filter)
@@ -44,6 +63,11 @@ class TransactionViewModel(
                 it.name.equals(kategoriStr.replace(" ", "").uppercase(), ignoreCase = true)
             }
         }
+    }
+
+    //    filter berdasarkan nominal
+    fun setSortOption(option: SortOption) {
+        _sortOption.value = option
     }
 
     // Saldo hasil kalkulasi
