@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.geby.saldo.data.model.Transaction
+import com.geby.saldo.data.model.TransactionCategory
 import com.geby.saldo.data.pref.UserPreference
 import com.geby.saldo.data.repository.TransaksiRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -19,8 +21,30 @@ class TransactionViewModel(
 ) : ViewModel() {
 
     val transactions: StateFlow<List<Transaction>> = repository.semuaTransaksi
-        .map { list -> list.sortedByDescending { it.date } }
+        .map { it -> it.sortedByDescending { it.date } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    private val _kategoriFilter = MutableStateFlow<TransactionCategory?>(null)
+    private val kategoriFilter: StateFlow<TransactionCategory?> = _kategoriFilter
+
+    val filteredTransactions: StateFlow<List<Transaction>> = combine(
+        transactions, kategoriFilter
+    ) { list, kategori ->
+        if (kategori == null) list
+        else list.filter { it.category == kategori }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun setKategoriFilter(kategoriStr: String) {
+        // Kalau pilih "Semua" berarti null (tidak pakai filter)
+        if (kategoriStr.equals("Semua", ignoreCase = true)) {
+            _kategoriFilter.value = null
+        } else {
+            // Cari enum yang cocok dengan nama kategori (case-insensitive)
+            _kategoriFilter.value = TransactionCategory.entries.find {
+                it.name.equals(kategoriStr.replace(" ", "").uppercase(), ignoreCase = true)
+            }
+        }
+    }
 
     // Saldo hasil kalkulasi
     val saldo: StateFlow<Double> = combine(

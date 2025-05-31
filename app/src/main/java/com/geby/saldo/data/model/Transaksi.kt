@@ -13,9 +13,24 @@ data class Transaction(
     val date: String, // kamu bisa simpan sebagai String (yyyy-MM-dd) atau Long (timestamp)
     val amount: Double,
     val type: TransactionType,
+    val category: TransactionCategory,
     val categoryIconRes: Int
 )
+
+enum class TransactionCategory {
+    MAKANAN,
+    TRANSPORTASI,
+    HIBURAN,
+    GAJI,
+    PENDIDIKAN;
+    companion object {
+        fun fromString(value: String): TransactionCategory? {
+            return entries.find { it.name.equals(value, ignoreCase = true) }
+        }
+    }
+}
 
 enum class TransactionType {
     INCOME, EXPENSE
 }
+

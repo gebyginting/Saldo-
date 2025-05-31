@@ -3,15 +3,15 @@ package com.geby.saldo.data.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.geby.saldo.R
 import com.geby.saldo.data.model.Transaction
 import com.geby.saldo.data.model.TransactionType
 import com.geby.saldo.databinding.ItemTransaksiBinding
 
-class TransactionAdapter(
-    val transactions: List<Transaction>
-) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
+class TransactionAdapter : ListAdapter<Transaction, TransactionAdapter.TransactionViewHolder>(DiffCallback) {
 
     inner class TransactionViewHolder(val binding: ItemTransaksiBinding)
         : RecyclerView.ViewHolder(binding.root)
@@ -26,7 +26,7 @@ class TransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        val item = transactions[position]
+        val item = getItem(position)
         with(holder.binding) {
             txtTitle.text = item.title
             txtDate.text = item.date
@@ -49,5 +49,15 @@ class TransactionAdapter(
         }
     }
 
-    override fun getItemCount(): Int = transactions.size
+    companion object DiffCallback : DiffUtil.ItemCallback<Transaction>() {
+        override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
+            // Misal pakai ID untuk cek kesamaan
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
+            // Cek seluruh isi sama atau tidak
+            return oldItem == newItem
+        }
+    }
 }

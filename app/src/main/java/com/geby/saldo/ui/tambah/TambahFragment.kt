@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.geby.saldo.R
 import com.geby.saldo.data.model.Transaction
+import com.geby.saldo.data.model.TransactionCategory
 import com.geby.saldo.data.model.TransactionType
 import com.geby.saldo.databinding.FragmentTambahBinding
 import com.geby.saldo.ui.viewmodel.TransactionViewModel
@@ -42,6 +43,7 @@ class TambahFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupToggleButtons()
+        setupKategoriDropdown()
 
         binding.btnSave.setOnClickListener {
             val nominalText = binding.etJumlah.text.toString()
@@ -49,7 +51,7 @@ class TambahFragment : BottomSheetDialogFragment() {
             val jenis = binding.spinnerJenis.selectedItem?.toString() ?: ""
 
             if (jenis == "🔽 Pilih jenis..." || jenis.isBlank()) {
-                Toast.makeText(requireContext(), "Pilih jenis transaksi", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Pilih jenis kategori", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -72,11 +74,17 @@ class TambahFragment : BottomSheetDialogFragment() {
 
             val date = getCurrentDateString()
 
+            // Convert jenis (String) ke TransactionCategory enum, case-insensitive dan hapus spasi
+            val categoryEnum = TransactionCategory.entries.find {
+                it.name.equals(jenis.replace(" ", "").uppercase(), ignoreCase = true)
+            } ?: TransactionCategory.MAKANAN // fallback jika tidak ketemu, sesuaikan
+
             val transaksi = Transaction(
                 title = catatan,
                 date = date,
                 amount = nominal,
                 type = type,
+                category = categoryEnum,
                 categoryIconRes = iconRes
             )
 
@@ -87,7 +95,6 @@ class TambahFragment : BottomSheetDialogFragment() {
             }
         }
     }
-
     private fun getCurrentDateString(): String {
         val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
         return sdf.format(System.currentTimeMillis())
@@ -119,13 +126,13 @@ class TambahFragment : BottomSheetDialogFragment() {
         btnPengeluaran.setOnClickListener {
             isPemasukan = false
             setActive(btnPengeluaran, btnPemasukan, R.color.red, R.drawable.ic_expense)
-            setupKategoriDropdown() // refresh isi dropdown
+            setupKategoriDropdown()
         }
 
         btnPemasukan.setOnClickListener {
             isPemasukan = true
             setActive(btnPemasukan, btnPengeluaran, R.color.green, R.drawable.ic_income2)
-            setupKategoriDropdown() // refresh isi dropdown
+            setupKategoriDropdown()
         }
 
         // Default aktif: pengeluaran
@@ -146,7 +153,7 @@ class TambahFragment : BottomSheetDialogFragment() {
             kategoriList
         ) {
             override fun isEnabled(position: Int): Boolean {
-                return position != 0 // disable "Pilih jenis..."
+                return position != 0
             }
         }
 

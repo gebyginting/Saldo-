@@ -70,7 +70,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.saldo.collect { saldo ->
-                    binding.textSaldo.text = "${Helper.formatRupiahTanpaKoma(saldo)}"
+                    binding.textSaldo.text = Helper.formatRupiahTanpaKoma(saldo)
                 }
             }
         }
@@ -170,7 +170,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        transactionAdapter = TransactionAdapter(emptyList())
+        transactionAdapter = TransactionAdapter()
         binding.recyclerViewRiwayat.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewRiwayat.adapter = transactionAdapter
 
@@ -182,14 +182,11 @@ class HomeFragment : Fragment() {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.transactions.collect { transactionList ->
                     val recentList = transactionList.takeLast(3)
-                    transactionAdapter = TransactionAdapter(recentList)
-                    binding.recyclerViewRiwayat.adapter = transactionAdapter
+                    transactionAdapter.submitList(recentList)
 
-                    // Update saldo dan pie chart juga di sini:
                     val income = transactionList.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
                     val expense = transactionList.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount }
 
-                    // Update pie chart
                     setupPieChart(income.toFloat(), expense.toFloat())
                 }
             }
@@ -208,8 +205,8 @@ class HomeFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                (transactionAdapter.transactions as MutableList).removeAt(position)
-                transactionAdapter.notifyItemRemoved(position)
+                val transaction = transactionAdapter.currentList[position]
+                viewModel.hapusTransaksi(transaction)  // Asumsi ada fungsi deleteTransaction di ViewModel
             }
         }
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerViewRiwayat)

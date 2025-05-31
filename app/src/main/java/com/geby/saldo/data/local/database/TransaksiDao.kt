@@ -21,7 +21,6 @@ interface TransaksiDao {
     @Query("SELECT * FROM `transaction` ORDER BY date DESC")
     fun getAllTransaksi(): Flow<List<Transaction>>
 
-
     @Query("SELECT * FROM `transaction` WHERE type = :jenis ORDER BY date DESC")
     fun getByJenis(jenis: String): LiveData<List<Transaction>>
 
