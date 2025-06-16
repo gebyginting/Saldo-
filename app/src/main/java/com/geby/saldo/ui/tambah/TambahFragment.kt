@@ -11,8 +11,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.geby.saldo.R
+import com.geby.saldo.data.local.item.DummyItems
+import com.geby.saldo.data.model.Category
 import com.geby.saldo.data.model.Transaction
-import com.geby.saldo.data.model.TransactionCategory
 import com.geby.saldo.data.model.TransactionType
 import com.geby.saldo.databinding.FragmentTambahBinding
 import com.geby.saldo.ui.viewmodel.TransactionViewModel
@@ -67,25 +68,22 @@ class TambahFragment : BottomSheetDialogFragment() {
             }
 
             val type = if (isPemasukan) TransactionType.INCOME else TransactionType.EXPENSE
-            val iconRes = if (isPemasukan)
-                kategoriPemasukan[jenis] ?: R.drawable.ic_income2
-            else
-                kategoriPengeluaran[jenis] ?: R.drawable.ic_expense
 
+            val currentType = if (isPemasukan) TransactionType.INCOME else TransactionType.EXPENSE
+            val selectedCategory = getCategoryByType(currentType).find { it.name == jenis }
+            if(selectedCategory == null) {
+                Toast.makeText(requireContext(), "Kategori tidak ditemukan", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val date = getCurrentDateString()
-
-            // Convert jenis (String) ke TransactionCategory enum, case-insensitive dan hapus spasi
-            val categoryEnum = TransactionCategory.entries.find {
-                it.name.equals(jenis.replace(" ", "").uppercase(), ignoreCase = true)
-            } ?: TransactionCategory.MAKANAN // fallback jika tidak ketemu, sesuaikan
 
             val transaksi = Transaction(
                 title = catatan,
                 date = date,
                 amount = nominal,
                 type = type,
-                category = categoryEnum,
-                categoryIconRes = iconRes
+                category = selectedCategory.category,
+                categoryIconRes = selectedCategory.iconResId
             )
 
             lifecycleScope.launch {
@@ -141,16 +139,15 @@ class TambahFragment : BottomSheetDialogFragment() {
 
     private fun setupKategoriDropdown() {
         val spinner = binding.spinnerJenis
-        val kategoriList = if (isPemasukan) {
-            listOf("🔽 Pilih jenis...") + kategoriPemasukan.keys
-        } else {
-            listOf("🔽 Pilih jenis...") + kategoriPengeluaran.keys
-        }
+        val currentType = if(isPemasukan) TransactionType.INCOME else TransactionType.EXPENSE
+        val categoryList = getCategoryByType(currentType)
+
+        val categoryListName = listOf("🔽 Pilih jenis...") + categoryList.map { it.name }
 
         val adapter = object : ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            kategoriList
+            categoryListName
         ) {
             override fun isEnabled(position: Int): Boolean {
                 return position != 0
@@ -162,17 +159,9 @@ class TambahFragment : BottomSheetDialogFragment() {
         spinner.setSelection(0)
     }
 
-    private val kategoriPengeluaran = mapOf(
-        "Makanan" to R.drawable.ic_food,
-        "Transportasi" to R.drawable.ic_transport,
-        "Pendidikan" to R.drawable.ic_education,
-        "Lainnya" to R.drawable.ic_expense
-    )
-
-    private val kategoriPemasukan = mapOf(
-        "Gaji" to R.drawable.ic_income,
-        "Lainnya" to R.drawable.ic_income2
-    )
+    private fun getCategoryByType(type: TransactionType): List<Category> {
+        return DummyItems.dummyCategoryItems.filter { it.type == type }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -16,6 +16,12 @@
         <item>Gaji</item>
     </string-array>
 
+    <string-array name="jenis_kategori_array">
+        <item>Pengeluaran</item>
+        <item>Pemasukan</item>
+    </string-array>
+
+
     <string-array name="tanggal_filter_array">
         <item>Hari Ini</item>
         <item>Minggu Ini</item>

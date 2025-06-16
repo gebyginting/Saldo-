@@ -20,9 +20,16 @@ data class Transaction(
 enum class TransactionCategory {
     MAKANAN,
     TRANSPORTASI,
+    PENDIDIKAN,
+    KESEHATAN,
+    DEBIT,
+    UTILITIES,
     HIBURAN,
-    GAJI,
-    PENDIDIKAN;
+    KERJA,
+    HADIAH,
+    UANG_SAKU,
+    OTHER;
+
     companion object {
         fun fromString(value: String): TransactionCategory? {
             return entries.find { it.name.equals(value, ignoreCase = true) }

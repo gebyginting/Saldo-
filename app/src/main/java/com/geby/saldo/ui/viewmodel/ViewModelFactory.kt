@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.geby.saldo.data.pref.UserPreference
+import com.geby.saldo.data.repository.KategoriRepository
 import com.geby.saldo.data.repository.TransaksiRepository
 import com.geby.saldo.di.Injection
 
 class ViewModelFactory private constructor(
     private val userPreference: UserPreference,
-    private val transaksiRepository: TransaksiRepository
+    private val transaksiRepository: TransaksiRepository,
+    private val categoryRepository: KategoriRepository,
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -20,6 +22,9 @@ class ViewModelFactory private constructor(
             }
             modelClass.isAssignableFrom(TransactionViewModel::class.java) -> {
                 TransactionViewModel(transaksiRepository, userPreference) as T
+            }
+            modelClass.isAssignableFrom(KategoriViewModel::class.java) -> {
+                KategoriViewModel(categoryRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
@@ -32,7 +37,7 @@ class ViewModelFactory private constructor(
         fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
                 val userPref = UserPreference.getInstance(context)
-                instance ?: ViewModelFactory(userPref, Injection.provideTransaksiRepository(context))
+                instance ?: ViewModelFactory(userPref, Injection.provideTransaksiRepository(context), Injection.provideKategoriRepository(context))
             }.also { instance = it }
     }
 }

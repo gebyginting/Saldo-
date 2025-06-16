@@ -4,13 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.geby.saldo.data.model.Category
 import com.geby.saldo.data.model.Transaction
 
 // init database dalam aplikasi
-@Database(entities = [Transaction::class], version = 1)
+@Database(entities = [Transaction::class, Category::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun transaksiDao(): TransaksiDao
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
         @Volatile

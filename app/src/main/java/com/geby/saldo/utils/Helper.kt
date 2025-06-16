@@ -9,5 +9,4 @@ object Helper {
         format.maximumFractionDigits = 0
         return format.format(number)
     }
-
 }
