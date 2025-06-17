@@ -59,6 +59,7 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
+            android:layout_marginHorizontal="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toggleGroup">
@@ -71,17 +72,24 @@
 
                 <!-- Jenis Transaksi -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/inputLayoutJenis"
+                    android:id="@+id/tilKategori"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Jenis">
+                    android:hint="Pilih kategori"
+                    app:boxBackgroundMode="none">
 
-                    <Spinner
-                        android:id="@+id/spinnerJenis"
+                    <AutoCompleteTextView
+                        android:id="@+id/actKategori"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:padding="8dp" />
+                        android:inputType="none"
+                        android:padding="6dp"
+                        android:dropDownHeight="200dp"
+                        android:drawableEnd="@drawable/ic_arrow_down"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:overScrollMode="always"
+                        android:scrollbars="vertical" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Nama Transaksi -->
@@ -125,20 +133,20 @@
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-
-
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Tombol Simpan -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
+            android:textColor="?attr/colorOnPrimary"
+            app:cornerRadius="12dp"
+            app:backgroundTint="?attr/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginHorizontal="8dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
             android:text="Save"
             android:textAllCaps="false"
             android:textSize="18sp"
