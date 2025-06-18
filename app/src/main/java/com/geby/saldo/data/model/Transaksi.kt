@@ -28,6 +28,18 @@ enum class TransactionCategory {
     KERJA,
     HADIAH,
     UANG_SAKU,
+    PET_CARE,
+    BODY_CARE,
+    DONATION,
+    FREELANCE,
+    HOUSING,
+    INVESTMENT,
+    LAUNDRY,
+    LOTTERY,
+    PARKING,
+    ROYALTY,
+    SCHOLARSHIP,
+    VOCATION,
     OTHER;
 
     companion object {
@@ -46,6 +58,7 @@ enum class SortOption {
     TERLAMA,
     NOMINAL_TERTINGGI,
     NOMINAL_TERENDAH;
+
     companion object {
         fun fromString(value: String): SortOption? {
             return SortOption.entries.find { it.name.equals(value, ignoreCase = true) }
