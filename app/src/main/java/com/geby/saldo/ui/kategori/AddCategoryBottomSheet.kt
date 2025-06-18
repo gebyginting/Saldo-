@@ -93,6 +93,15 @@ class AddCategoryBottomSheetFragment : BottomSheetDialogFragment() {
     private fun setupSaveButton() {
         binding.btnSimpan.setOnClickListener {
             if (selectedCategory != null) {
+                // Cek apakah kategori sudah ada
+                if (viewModel.categoryExisted(selectedCategory)) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Kategori '${selectedCategory?.name}' sudah ada.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
                 viewModel.tambahKategori(selectedCategory!!)
                 dismiss()
             } else {

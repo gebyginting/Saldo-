@@ -27,4 +27,11 @@ class KategoriViewModel(private val repository: KategoriRepository) : ViewModel(
             loadKategori() // refresh setelah insert
         }
     }
+
+    fun categoryExisted(category: Category?): Boolean {
+        return _kategoriList.value?.any {
+            it.name.equals(category?.name, ignoreCase = true) &&it.type == category?.type
+        } == true
+
+    }
 }

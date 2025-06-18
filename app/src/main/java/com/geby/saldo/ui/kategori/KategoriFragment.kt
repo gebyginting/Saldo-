@@ -37,13 +37,17 @@ class KategoriFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CategoryAdapter(kategoriList)
-        binding.rvKategori.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.rvKategori.adapter = adapter
-
-        viewModel.kategoriList.observe(viewLifecycleOwner) {
+        viewModel.kategoriList.observe(viewLifecycleOwner) { it ->
             kategoriList.clear()
             kategoriList.addAll(it)
+
+            // ⬇️ Sort dengan kategori "other" di paling bawah
+            val (otherCategories, normalCategories) = kategoriList.partition { it.isOtherCategory }
+            val finalList = normalCategories.sortedBy { it.name } + otherCategories
+
+            adapter = CategoryAdapter(finalList)
+            binding.rvKategori.layoutManager = GridLayoutManager(requireContext(), 2)
+            binding.rvKategori.adapter = adapter
             adapter.notifyDataSetChanged()
         }
         viewModel.loadKategori()

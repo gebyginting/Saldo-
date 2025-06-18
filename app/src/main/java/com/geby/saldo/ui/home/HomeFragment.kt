@@ -104,10 +104,13 @@ class HomeFragment : Fragment() {
         val dataSet = PieDataSet(entries, "")
 
         // Custom warna untuk setiap slice pada pie chart
-        val customColors = listOf(
-            Color.parseColor("#4CAF50"), // Hijau untuk pemasukan
-            Color.parseColor("#F44336")  // Merah untuk pengeluaran
-        )
+        val customColors = entries.map { entry ->
+            when (entry.label) {
+                "Pemasukan" -> Color.parseColor("#4CAF50") // Hijau
+                "Pengeluaran" -> Color.parseColor("#F44336") // Merah
+                else -> Color.GRAY // Default kalau ada label lain
+            }
+        }
         dataSet.colors = customColors
 
         // Ukuran teks nilai (persentase) di dalam slice

@@ -153,7 +153,9 @@ class TambahFragment : BottomSheetDialogFragment() {
 
     private fun updateKategoriDropdown() {
         val categories = getCategoryByType(currentTransactionType())
-        val items = categories.map { it.name }
+        val (otherCategories, normalCategoris) = categories.partition { it.isOtherCategory }
+        val finalList = normalCategoris.sortedBy { it.name } + otherCategories
+        val items = finalList.map { it.name }
 
         val adapter = ArrayAdapter(
             requireContext(),
@@ -162,7 +164,7 @@ class TambahFragment : BottomSheetDialogFragment() {
         )
 
         binding.actKategori.setAdapter(adapter)
-        binding.actKategori.setText("") // reset pilihan
+        binding.actKategori.setText("")
 
         // show dropdown ketika diklik
         binding.actKategori.setOnClickListener {
@@ -171,8 +173,7 @@ class TambahFragment : BottomSheetDialogFragment() {
 
         // simpan kategori yang dipilih
         binding.actKategori.setOnItemClickListener { _, _, position, _ ->
-            selectedCategory = categories[position]
-            Log.d("TambahFragment", "Kategori Dipilih: ${selectedCategory?.name}")
+            selectedCategory = finalList[position]
         }
     }
 
