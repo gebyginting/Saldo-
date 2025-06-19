@@ -37,4 +37,7 @@ interface TransaksiDao {
 """)
     fun getTotalSaldoFlow(): Flow<Double>
 
+    @Query("DELETE FROM `transaction`")
+    suspend fun deleteAllTransaksi()
+
 }

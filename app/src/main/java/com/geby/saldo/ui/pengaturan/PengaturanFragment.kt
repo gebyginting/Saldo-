@@ -1,6 +1,7 @@
 package com.geby.saldo.ui.pengaturan
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -47,6 +48,19 @@ class PengaturanFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.cvExportData.setOnClickListener { exportData() }
         binding.cvImportData.setOnClickListener { openFilePicker() }
+        binding.btnDeleteData.setOnClickListener { deleteData() }
+    }
+
+    private fun deleteData() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Hapus Semua Transaksi")
+            .setMessage("Apakah kamu yakin ingin menghapus semua data transaksi?")
+            .setPositiveButton("Hapus") { _, _ ->
+                viewModel.hapusSemuaTransaksi()
+            }
+            .setNegativeButton("Batal", null)
+            .show()
+
     }
 
     private fun exportData() {
@@ -88,7 +102,6 @@ class PengaturanFragment : Fragment() {
     }
 
     // IMPORT CSV FILE
-
     private fun openFilePicker() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "*/*"
@@ -163,7 +176,8 @@ class PengaturanFragment : Fragment() {
     // get icon based on category
     private fun getIconResForCategory(category: TransactionCategory): Int {
         return when (category) {
-            TransactionCategory.OTHER -> R.drawable.ic_other_expense
+            TransactionCategory.OTHER_EXPENSE -> R.drawable.ic_other_expense
+            TransactionCategory.OTHER_INCOME -> R.drawable.ic_other_income
             TransactionCategory.MAKANAN -> R.drawable.ic_food
             TransactionCategory.TRANSPORTASI -> R.drawable.ic_food
             TransactionCategory.PENDIDIKAN -> R.drawable.ic_education

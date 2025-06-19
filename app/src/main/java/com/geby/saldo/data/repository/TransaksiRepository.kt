@@ -22,6 +22,8 @@ class TransaksiRepository private constructor(context: Context) {
 
     suspend fun hapus(transaksi: Transaction) = dao.delete(transaksi)
 
+    suspend fun hapusSemua() = dao.deleteAllTransaksi()
+
     fun getByJenis(jenis: String) = dao.getByJenis(jenis)
 
     companion object {

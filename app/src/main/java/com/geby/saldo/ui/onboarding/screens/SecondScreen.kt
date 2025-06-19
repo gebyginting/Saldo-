@@ -1,6 +1,5 @@
 package com.geby.saldo.ui.onboarding.screens
 
-import com.geby.saldo.ui.viewmodel.UserViewModel
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.geby.saldo.R
 import com.geby.saldo.databinding.FragmentSecondScreenBinding
+import com.geby.saldo.ui.viewmodel.UserViewModel
 import com.geby.saldo.ui.viewmodel.ViewModelFactory
+import com.geby.saldo.utils.Helper.cleanSaldo
+import com.geby.saldo.utils.Helper.setupCurrencyFormatter
 import kotlinx.coroutines.launch
 
 class SecondScreen : Fragment() {
@@ -32,6 +34,7 @@ class SecondScreen : Fragment() {
         val view = binding.root
 
         setupButtons()
+        setupCurrencyFormatter(binding.etSaldoAwal)
         return view
     }
 
@@ -43,7 +46,7 @@ class SecondScreen : Fragment() {
 
     private fun setupUserPreference() {
         val name = binding.etNama.text.toString()
-        val saldo = binding.etSaldoAwal.text.toString().toDoubleOrNull()
+        val saldo = cleanSaldo(binding.etSaldoAwal.text.toString())
         if (name.isNotEmpty() && saldo != null) {
             lifecycleScope.launch {
                 userViewModel.saveUser(name, saldo)

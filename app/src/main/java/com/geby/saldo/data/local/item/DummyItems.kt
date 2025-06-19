@@ -11,10 +11,10 @@ object DummyItems {
         Category(name = "Transportation", iconResId = R.drawable.ic_transport, type = TransactionType.EXPENSE, category = TransactionCategory.TRANSPORTASI),
         Category(name = "Education", iconResId = R.drawable.ic_education, type = TransactionType.EXPENSE, category = TransactionCategory.PENDIDIKAN),
         Category(name = "Health", iconResId = R.drawable.ic_medical, type = TransactionType.EXPENSE, category = TransactionCategory.KESEHATAN),
-        Category(name = "Other Expense", iconResId = R.drawable.ic_other_expense, type = TransactionType.EXPENSE, category = TransactionCategory.OTHER, isOtherCategory = true),
+        Category(name = "Other Expense", iconResId = R.drawable.ic_other_expense, type = TransactionType.EXPENSE, category = TransactionCategory.OTHER_EXPENSE, isOtherCategory = true),
         Category(name = "Work", iconResId = R.drawable.ic_work, type = TransactionType.INCOME, category = TransactionCategory.KERJA),
         Category(name = "Gift", iconResId = R.drawable.ic_gift, type = TransactionType.INCOME, category = TransactionCategory.HADIAH),
-        Category(name = "Other Income", iconResId = R.drawable.ic_other_income, type = TransactionType.INCOME, category = TransactionCategory.OTHER, isOtherCategory = true),
+        Category(name = "Other Income", iconResId = R.drawable.ic_other_income, type = TransactionType.INCOME, category = TransactionCategory.OTHER_INCOME, isOtherCategory = true),
         )
 
     val dummyOptionCategoryItems = listOf(

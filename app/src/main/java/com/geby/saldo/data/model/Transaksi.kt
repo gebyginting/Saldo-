@@ -40,7 +40,8 @@ enum class TransactionCategory {
     ROYALTY,
     SCHOLARSHIP,
     VOCATION,
-    OTHER;
+    OTHER_EXPENSE,
+    OTHER_INCOME;
 
     companion object {
         fun fromString(value: String): TransactionCategory? {

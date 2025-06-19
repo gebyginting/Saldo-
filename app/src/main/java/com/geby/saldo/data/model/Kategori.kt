@@ -9,6 +9,6 @@ data class Category(
     val name: String,
     val iconResId: Int,
     val type: TransactionType,
-    val category: TransactionCategory = TransactionCategory.OTHER,
+    val category: TransactionCategory = TransactionCategory.OTHER_EXPENSE,
     val isOtherCategory: Boolean = false
 )

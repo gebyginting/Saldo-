@@ -108,5 +108,14 @@ class TransactionViewModel(
         }
     }
 
-    fun getTransaksiByJenis(jenis: String) = repository.getByJenis(jenis)
+    fun hapusSemuaTransaksi() {
+        viewModelScope.launch {
+            try {
+                repository.hapusSemua()
+            } catch (e: Exception) {
+                Log.e("TRANSAKSI_ERROR", "Gagal hapus semua transaksi: ${e.message}", e)
+            }
+        }
+    }
+
 }

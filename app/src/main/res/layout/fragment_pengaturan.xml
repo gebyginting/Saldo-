@@ -237,7 +237,7 @@
 
         <!-- Logout -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSelanjutnya"
+            android:id="@+id/btnDeleteData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"

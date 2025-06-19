@@ -19,6 +19,8 @@ import com.geby.saldo.databinding.FragmentTambahBinding
 import com.geby.saldo.ui.viewmodel.KategoriViewModel
 import com.geby.saldo.ui.viewmodel.TransactionViewModel
 import com.geby.saldo.ui.viewmodel.ViewModelFactory
+import com.geby.saldo.utils.Helper.cleanSaldo
+import com.geby.saldo.utils.Helper.setupCurrencyFormatter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
@@ -53,6 +55,7 @@ class TambahFragment : BottomSheetDialogFragment() {
         setupToggleButtons()
         observeKategori()
         setupListeners()
+        setupCurrencyFormatter(binding.etJumlah)
     }
 
     private fun observeKategori() {
@@ -87,7 +90,7 @@ class TambahFragment : BottomSheetDialogFragment() {
             return
         }
 
-        val nominal = nominalText.toDoubleOrNull()
+        val nominal = cleanSaldo(nominalText)
         if (nominal == null || nominal <= 0) {
             binding.etJumlah.error = "Nominal tidak valid"
             return
@@ -176,7 +179,6 @@ class TambahFragment : BottomSheetDialogFragment() {
             selectedCategory = finalList[position]
         }
     }
-
 
     private fun getCategoryByType(type: TransactionType) = allCategoryList.filter { it.type == type }
 
