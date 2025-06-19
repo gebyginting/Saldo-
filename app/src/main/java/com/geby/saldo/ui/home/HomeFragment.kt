@@ -184,7 +184,16 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.transactions.collect { transactionList ->
-                    val recentList = transactionList.takeLast(3)
+                    if (transactionList.isEmpty()) {
+                        binding.emptyTransactionMsg.visibility = View.VISIBLE
+                        transactionAdapter.submitList(emptyList())
+                        setupPieChart(0f, 0f)
+                        return@collect
+                    }
+
+                    binding.emptyTransactionMsg.visibility = View.GONE
+
+                    val recentList = transactionList.sortedByDescending { it.date }.take(3)
                     transactionAdapter.submitList(recentList)
 
                     val income = transactionList.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }

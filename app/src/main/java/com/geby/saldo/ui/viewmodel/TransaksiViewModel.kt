@@ -90,7 +90,6 @@ class TransactionViewModel(
         viewModelScope.launch {
             try {
                 repository.tambah(transaction)
-                // Tidak perlu update saldo ke DataStore lagi
             } catch (e: Exception) {
                 Log.e("TRANSAKSI_ERROR", "Gagal tambah transaksi: ${e.message}", e)
             }

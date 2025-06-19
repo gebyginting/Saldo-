@@ -4,6 +4,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Currency
 import java.util.Locale
 
@@ -55,6 +57,30 @@ object Helper {
         val newSaldo = cleanSaldo.toDoubleOrNull()
         return newSaldo
     }
+
+    fun formatTanggalUI(dateString: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("dd MMMM yyyy - HH.mm", Locale("id", "ID"))
+            val date = inputFormat.parse(dateString)
+
+            val calendarNow = Calendar.getInstance()
+            val calendarDate = Calendar.getInstance().apply { time = date }
+
+            val isSameDay = calendarNow.get(Calendar.YEAR) == calendarDate.get(Calendar.YEAR)
+                    && calendarNow.get(Calendar.DAY_OF_YEAR) == calendarDate.get(Calendar.DAY_OF_YEAR)
+
+            if (isSameDay) {
+                val timeFormat = SimpleDateFormat("HH.mm", Locale("id", "ID"))
+                "Hari ini - ${timeFormat.format(date!!)}"
+            } else {
+                outputFormat.format(date!!)
+            }
+        } catch (e: Exception) {
+            "-"
+        }
+    }
+
 
 
 }

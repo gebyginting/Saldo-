@@ -10,6 +10,7 @@ import com.geby.saldo.R
 import com.geby.saldo.data.model.Transaction
 import com.geby.saldo.data.model.TransactionType
 import com.geby.saldo.databinding.ItemTransaksiBinding
+import com.geby.saldo.utils.Helper.formatTanggalUI
 
 class TransactionAdapter : ListAdapter<Transaction, TransactionAdapter.TransactionViewHolder>(DiffCallback) {
 
@@ -29,7 +30,7 @@ class TransactionAdapter : ListAdapter<Transaction, TransactionAdapter.Transacti
         val item = getItem(position)
         with(holder.binding) {
             txtTitle.text = item.title
-            txtDate.text = item.date
+            txtDate.text = formatTanggalUI(item.date)
             imgCategory.setImageResource(item.categoryIconRes)
 
             val formattedAmount = "Rp %,d".format(item.amount.toInt())

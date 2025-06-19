@@ -185,7 +185,7 @@ class TambahFragment : BottomSheetDialogFragment() {
     private fun currentTransactionType(): TransactionType = if (isPengeluaran) TransactionType.EXPENSE else TransactionType.INCOME
 
     private fun getCurrentDateString(): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
         return sdf.format(System.currentTimeMillis())
     }
 

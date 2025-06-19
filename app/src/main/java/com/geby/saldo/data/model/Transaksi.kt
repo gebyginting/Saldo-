@@ -10,7 +10,7 @@ import com.geby.saldo.utils.TransactionTypeConverter
 data class Transaction(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
-    val date: String, // kamu bisa simpan sebagai String (yyyy-MM-dd) atau Long (timestamp)
+    val date: String,
     val amount: Double,
     val type: TransactionType,
     val category: TransactionCategory,
