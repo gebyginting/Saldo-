@@ -12,7 +12,9 @@ import com.geby.saldo.data.model.TransactionType
 import com.geby.saldo.databinding.ItemTransaksiBinding
 import com.geby.saldo.utils.Helper.formatTanggalUI
 
-class TransactionAdapter : ListAdapter<Transaction, TransactionAdapter.TransactionViewHolder>(DiffCallback) {
+class TransactionAdapter(
+    private var currencySymbol: String = "Rp"
+) : ListAdapter<Transaction, TransactionAdapter.TransactionViewHolder>(DiffCallback) {
 
     inner class TransactionViewHolder(val binding: ItemTransaksiBinding)
         : RecyclerView.ViewHolder(binding.root)
@@ -33,7 +35,7 @@ class TransactionAdapter : ListAdapter<Transaction, TransactionAdapter.Transacti
             txtDate.text = formatTanggalUI(item.date)
             imgCategory.setImageResource(item.categoryIconRes)
 
-            val formattedAmount = "Rp %,d".format(item.amount.toInt())
+            val formattedAmount = "$currencySymbol%,d".format(item.amount.toInt())
             txtAmount.text = if (item.type == TransactionType.INCOME) {
                 "+ $formattedAmount"
             } else {
@@ -48,6 +50,11 @@ class TransactionAdapter : ListAdapter<Transaction, TransactionAdapter.Transacti
                 )
             )
         }
+    }
+
+    fun updateCurrencySymbol(symbol: String) {
+        currencySymbol = symbol
+        notifyDataSetChanged()
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<Transaction>() {

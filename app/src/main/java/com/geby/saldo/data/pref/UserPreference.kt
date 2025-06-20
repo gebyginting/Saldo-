@@ -18,6 +18,7 @@ class UserPreference private constructor(private val context: Context) {
         private val NAME_KEY = stringPreferencesKey("user_name")
         private val SALDO_AWAL_KEY = doublePreferencesKey("user_saldo")
         private val DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
+        private val CURRENCY_KEY = stringPreferencesKey("currency_symbol")
 
         @SuppressLint("StaticFieldLeak")
         @Volatile
@@ -43,6 +44,16 @@ class UserPreference private constructor(private val context: Context) {
     val darkMode: Flow<Boolean> = context.dataStore.data.map {
         it[DARK_MODE_KEY] ?: false
     }
+
+    suspend fun setCurrencySymbol(symbol: String) {
+        context.dataStore.edit { preferences ->
+            preferences[CURRENCY_KEY] = symbol
+        }
+    }
+
+    val currencySymbol: Flow<String> = context.dataStore.data
+        .map { preferences -> preferences[CURRENCY_KEY] ?: "Rp" }
+
 
     suspend fun saveUser(name: String, saldoAwal: Double) {
         context.dataStore.edit { prefs ->
