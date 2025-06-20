@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Theme Colors -->
+    <color name="colorPrimary">#8F93B3</color>           <!-- Soft indigo: versi terang dari #404763 -->
+    <color name="colorPrimaryVariant">#6C72A6</color>    <!-- Versi lebih dalam dan tegas -->
+    <color name="colorSecondary">#6F9AD5</color>         <!-- Tetap sama, karena pastel blue juga cocok di dark -->
+    <color name="colorOnPrimary">#000000</color>         <!-- Karena primary terang, teks gelap lebih kontras -->
+
+    <color name="colorBackground">#12121A</color>        <!-- Sangat gelap tapi bukan hitam pekat -->
+    <color name="colorSurface">#1C1C2E</color>           <!-- Untuk card/sheet: biru tua agak keabu -->
+    <color name="colorOnBackground">#E6E6F0</color>      <!-- Putih kebiruan, lembut untuk teks -->
+    <color name="colorOnSurface">#F1F1F9</color>
+
+    <!-- Status Colors -->
+    <color name="successColor">#22C55E</color>
+    <color name="warningColor">#FACC15</color>
+    <color name="errorColor">#EF4444</color>
+
+</resources>
