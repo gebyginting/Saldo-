@@ -1,7 +1,5 @@
 package com.geby.saldo.ui.home
 
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,10 +21,7 @@ import com.geby.saldo.ui.viewmodel.TransactionViewModel
 import com.geby.saldo.ui.viewmodel.UserViewModel
 import com.geby.saldo.ui.viewmodel.ViewModelFactory
 import com.geby.saldo.utils.Helper
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.PercentFormatter
+import com.geby.saldo.utils.PieChartManager
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -35,8 +30,9 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var transactionAdapter: TransactionAdapter
     private val factory: ViewModelFactory by lazy { ViewModelFactory.getInstance(requireContext()) }
-    private val userViewModel: UserViewModel by viewModels { factory }
+    private val userViewModel: UserViewModel by  viewModels { factory }
     private val viewModel: TransactionViewModel by viewModels { factory }
+    private var currentSymbol: String = "Rp"
 
     companion object {
         var USER_NAME = "USER_NAME"
@@ -67,113 +63,37 @@ class HomeFragment : Fragment() {
             binding.textWelcome.text = "Halo, $name \uD83D\uDC4B"
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.saldo.collect { saldo ->
-                    binding.textSaldo.text = Helper.formatRupiahTanpaKoma(saldo)
-                }
-            }
+        // Observe simbol mata uang
+        userViewModel.currencySymbol.observe(viewLifecycleOwner) { symbol ->
+            currentSymbol = symbol
+            transactionAdapter.updateCurrencySymbol(symbol)
+            updateSaldoAndStatic()
         }
 
+        // Collect saldo dan pemasukan/pengeluaran
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
+                    viewModel.saldo.collect {
+                        updateSaldoText(it)
+                    }
+                }
+                launch {
                     viewModel.totalPemasukan.collect {
-                        binding.tvTotalIncome.text = Helper.formatRupiahTanpaKoma(it)
+                        updatePemasukanText(it)
                     }
                 }
                 launch {
                     viewModel.totalPengeluaran.collect {
-                        binding.tvTotalExpense.text = Helper.formatRupiahTanpaKoma(it)
+                        updatePengeluaranText(it)
                     }
                 }
             }
         }
     }
 
-    private fun setupPieChart(income: Float, expense: Float) {
-        // Membuat list data untuk pie chart, berupa PieEntry yang berisi nilai dan label
-        val entries = ArrayList<PieEntry>()
-
-        // Tambahkan data pemasukan jika lebih dari 0, dengan label "Pemasukan"
-        if (income > 0) entries.add(PieEntry(income, "Pemasukan"))
-        // Tambahkan data pengeluaran jika lebih dari 0, dengan label "Pengeluaran"
-        if (expense > 0) entries.add(PieEntry(expense, "Pengeluaran"))
-
-        // Membuat dataset dari entries, label dataset dikosongkan ("")
-        val dataSet = PieDataSet(entries, "")
-
-        // Custom warna untuk setiap slice pada pie chart
-        val customColors = entries.map { entry ->
-            when (entry.label) {
-                "Pemasukan" -> Color.parseColor("#4CAF50") // Hijau
-                "Pengeluaran" -> Color.parseColor("#F44336") // Merah
-                else -> Color.GRAY // Default kalau ada label lain
-            }
-        }
-        dataSet.colors = customColors
-
-        // Ukuran teks nilai (persentase) di dalam slice
-        dataSet.valueTextSize = 12f
-        // Warna teks nilai di dalam slice
-        dataSet.valueTextColor = Color.WHITE
-        // Typeface untuk teks nilai agar tebal (bold)
-        dataSet.valueTypeface = Typeface.DEFAULT_BOLD
-        // Jarak antar potongan slice (agar tidak menempel)
-        dataSet.sliceSpace = 2f
-
-        // Pastikan nilai persentase ditampilkan di dalam slice
-        dataSet.setDrawValues(true)
-
-        // Mengatur agar data pada pie chart menggunakan nilai persentase (bukan nilai mentah)
-        binding.pieChart.setUsePercentValues(true)
-
-        // Membuat objek PieData dari dataSet, lalu mengatur formatter supaya nilai ditampilkan dalam format persen
-        binding.pieChart.data = PieData(dataSet).apply {
-            setValueFormatter(PercentFormatter(binding.pieChart))
-        }
-
-        // Matikan deskripsi default yang biasanya muncul di bawah chart
-        binding.pieChart.description.isEnabled = false
-
-        // Set teks di tengah pie chart
-        binding.pieChart.centerText = "Keuangan"
-        // Ukuran teks di tengah pie chart
-        binding.pieChart.setCenterTextSize(14f)
-
-        // Jangan tampilkan label kategori (Pemasukan/Pengeluaran) di dalam slice,
-        // hanya tampilkan persentase saja
-        binding.pieChart.setDrawEntryLabels(false)
-
-        // Mengatur legend (keterangan warna) yang muncul di bawah pie chart
-        val legend = binding.pieChart.legend
-        legend.isEnabled = true // pastikan legend aktif
-        legend.verticalAlignment = com.github.mikephil.charting.components.Legend.LegendVerticalAlignment.CENTER // posisi vertikal legend
-        legend.horizontalAlignment = com.github.mikephil.charting.components.Legend.LegendHorizontalAlignment.RIGHT // posisi horizontal legend
-        legend.orientation = com.github.mikephil.charting.components.Legend.LegendOrientation.VERTICAL// orientasi legend (horizontal)
-        legend.setDrawInside(false) // legend ditampilkan di luar chart, bukan di dalam
-        legend.textSize = 12f // ukuran teks legend
-        legend.form = com.github.mikephil.charting.components.Legend.LegendForm.CIRCLE // bentuk simbol legend berupa lingkaran
-        legend.formSize = 12f // ukuran simbol legend
-        legend.xEntrySpace = 20f // jarak horizontal antar entri legend
-        legend.yOffset = 10f  // coba angka negatif seperti ini untuk mendekatkan legend ke pie chart
-
-        // Aktifkan lingkaran "hole" (lubang tengah) pada pie chart
-        binding.pieChart.isDrawHoleEnabled = true
-        // Warna lingkaran lubang tengah
-        binding.pieChart.setHoleColor(Color.WHITE)
-        // Menghilangkan lingkaran transparan di sekitar hole (agar lebih bersih)
-        binding.pieChart.setTransparentCircleAlpha(0)
-
-        // Animasi saat pie chart muncul, arah vertikal selama 1000ms (1 detik)
-        binding.pieChart.animateY(1000)
-
-        // Memanggil invalidate supaya pie chart di-refresh dan ditampilkan ulang
-        binding.pieChart.invalidate()
-    }
-
     private fun setupRecyclerView() {
-        transactionAdapter = TransactionAdapter()
+        transactionAdapter = TransactionAdapter(currentSymbol)
         binding.recyclerViewRiwayat.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewRiwayat.adapter = transactionAdapter
 
@@ -187,7 +107,7 @@ class HomeFragment : Fragment() {
                     if (transactionList.isEmpty()) {
                         binding.emptyTransactionMsg.visibility = View.VISIBLE
                         transactionAdapter.submitList(emptyList())
-                        setupPieChart(0f, 0f)
+                        PieChartManager.setupEmptyChart(binding.pieChart)
                         return@collect
                     }
 
@@ -199,7 +119,7 @@ class HomeFragment : Fragment() {
                     val income = transactionList.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
                     val expense = transactionList.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount }
 
-                    setupPieChart(income.toFloat(), expense.toFloat())
+                    PieChartManager.setupChart(binding.pieChart, income.toFloat(), expense.toFloat())
                 }
             }
         }
@@ -231,6 +151,24 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // UPDATE SALDO
+    private fun updateSaldoAndStatic() {
+        updateSaldoText(viewModel.saldo.value)
+        updatePemasukanText(viewModel.totalPemasukan.value)
+        updatePengeluaranText(viewModel.totalPengeluaran.value)
+    }
+
+    private fun updateSaldoText(saldo: Double) {
+        binding.textSaldo.text = "$currentSymbol${Helper.formatNumberTanpaKoma(saldo)}"
+    }
+
+    private fun updatePemasukanText(pemasukan: Double) {
+        binding.tvTotalIncome.text = "$currentSymbol${Helper.formatNumberTanpaKoma(pemasukan)}"
+    }
+
+    private fun updatePengeluaranText(pengeluaran: Double) {
+        binding.tvTotalExpense.text = "$currentSymbol${Helper.formatNumberTanpaKoma(pengeluaran)}"
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

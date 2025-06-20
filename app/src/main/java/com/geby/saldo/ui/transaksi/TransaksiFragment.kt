@@ -20,6 +20,7 @@ import com.geby.saldo.data.adapter.TransactionAdapter
 import com.geby.saldo.data.model.SortOption
 import com.geby.saldo.databinding.FragmentTransaksiBinding
 import com.geby.saldo.ui.viewmodel.TransactionViewModel
+import com.geby.saldo.ui.viewmodel.UserViewModel
 import com.geby.saldo.ui.viewmodel.ViewModelFactory
 import com.geby.saldo.utils.Helper
 import kotlinx.coroutines.launch
@@ -31,6 +32,7 @@ class TransaksiFragment : Fragment() {
     private lateinit var transactionAdapter: TransactionAdapter
     private val factory: ViewModelFactory by lazy { ViewModelFactory.getInstance(requireContext()) }
     private val transaksiViewModel: TransactionViewModel by viewModels { factory }
+    private val userViewModel: UserViewModel by  viewModels { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,6 +95,10 @@ class TransaksiFragment : Fragment() {
                 }
             }
         }
+        userViewModel.currencySymbol.observe(viewLifecycleOwner) { symbol ->
+            transactionAdapter.updateCurrencySymbol(symbol)
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
