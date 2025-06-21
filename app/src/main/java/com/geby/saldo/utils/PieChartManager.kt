@@ -16,6 +16,7 @@ object PieChartManager {
             if (income > 0) add(PieEntry(income, "Pemasukan"))
             if (expense > 0) add(PieEntry(expense, "Pengeluaran"))
         }
+        val isDark = isDarkMode(pieChart)
 
         val dataSet = PieDataSet(entries, "").apply {
             colors = entries.map {
@@ -37,14 +38,16 @@ object PieChartManager {
             data = PieData(dataSet).apply {
                 setValueFormatter(PercentFormatter(pieChart))
             }
-            configureAppearance("Keuangan")
-            configureLegend()
+            configureAppearance("Keuangan", isDark)
+            configureLegend(isDark)
             animateY(1000)
             invalidate()
         }
     }
 
     fun setupEmptyChart(pieChart: PieChart) {
+        val isDark = isDarkMode(pieChart)
+
         val dataSet = PieDataSet(listOf(PieEntry(1f, "Belum Ada Data")), "").apply {
             colors = listOf(Color.LTGRAY)
             valueTextColor = Color.TRANSPARENT
@@ -54,24 +57,26 @@ object PieChartManager {
         pieChart.apply {
             setUsePercentValues(false)
             data = PieData(dataSet)
-            configureAppearance("Belum Ada Data")
+            configureAppearance("Belum Ada Data", isDark)
             legend.isEnabled = false
             animateY(500)
             invalidate()
         }
+
     }
 
-    private fun PieChart.configureAppearance(centerText: String) {
+    private fun PieChart.configureAppearance(centerText: String, isDark: Boolean) {
         description.isEnabled = false
         this.centerText = centerText
         setCenterTextSize(14f)
         setDrawEntryLabels(false)
         isDrawHoleEnabled = true
-        setHoleColor(Color.WHITE)
+        setCenterTextColor(if (isDark) Color.WHITE else Color.BLACK)
+        setHoleColor(if (isDark) Color.BLACK else Color.WHITE)
         setTransparentCircleAlpha(0)
     }
 
-    private fun PieChart.configureLegend() {
+    private fun PieChart.configureLegend(isDark: Boolean) {
         legend.apply {
             isEnabled = true
             verticalAlignment = Legend.LegendVerticalAlignment.CENTER
@@ -79,10 +84,17 @@ object PieChartManager {
             orientation = Legend.LegendOrientation.VERTICAL
             setDrawInside(false)
             textSize = 12f
+            textColor = if (isDark) Color.WHITE else Color.BLACK
             form = Legend.LegendForm.CIRCLE
             formSize = 12f
             xEntrySpace = 20f
             yOffset = 10f
         }
+    }
+
+
+    private fun isDarkMode(pieChart: PieChart): Boolean {
+        val uiMode = pieChart.context.resources.configuration.uiMode
+        return (uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
     }
 }

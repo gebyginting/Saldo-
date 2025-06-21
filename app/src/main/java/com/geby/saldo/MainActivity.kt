@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.geby.saldo.data.pref.UserPreference
 import com.geby.saldo.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +26,15 @@ class MainActivity : AppCompatActivity() {
         R.id.navigation_pengaturan
     )
     override fun onCreate(savedInstanceState: Bundle?) {
+        val userPref = UserPreference.getInstance(this)
+
+        runBlocking {
+            val isDarkMode = userPref.darkMode.first()
+            AppCompatDelegate.setDefaultNightMode(
+                if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge() // BOLEH sebelum setContentView()

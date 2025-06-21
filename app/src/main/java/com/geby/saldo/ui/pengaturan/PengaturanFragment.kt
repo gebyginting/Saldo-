@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -18,6 +19,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.geby.saldo.data.pref.UserPreference
 import com.geby.saldo.databinding.FragmentPengaturanBinding
 import com.geby.saldo.ui.viewmodel.TransactionViewModel
+import com.geby.saldo.ui.viewmodel.UserViewModel
 import com.geby.saldo.ui.viewmodel.ViewModelFactory
 import com.geby.saldo.utils.TransactionCsvHelper
 import kotlinx.coroutines.flow.filter
@@ -32,6 +34,10 @@ class PengaturanFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: TransactionViewModel by activityViewModels {
+        ViewModelFactory.getInstance(requireContext())
+    }
+
+    private val userViewModel: UserViewModel by activityViewModels {
         ViewModelFactory.getInstance(requireContext())
     }
 
@@ -51,6 +57,7 @@ class PengaturanFragment : Fragment() {
         userPreference = UserPreference.getInstance(requireContext())
         setupUI()
         setupActions()
+        themeSetting()
     }
 
     private fun setupUI() {
@@ -60,6 +67,25 @@ class PengaturanFragment : Fragment() {
                     binding.tvSelectedCurrency.text = symbol
                 }
             }
+        }
+    }
+
+    private fun themeSetting() {
+        val switchDarkMode = binding.switchDarkMode
+
+        userViewModel.darkMode.observe(viewLifecycleOwner) { isDarkMode ->
+            switchDarkMode.isChecked = isDarkMode
+
+            AppCompatDelegate.setDefaultNightMode(
+                if (isDarkMode)
+                    AppCompatDelegate.MODE_NIGHT_YES
+                else
+                    AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
+
+        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            userViewModel.toggleDarkMode(isChecked)
         }
     }
 

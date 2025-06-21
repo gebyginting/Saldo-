@@ -3,7 +3,6 @@ package com.geby.saldo.utils
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
-import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -19,11 +18,6 @@ object Helper {
 
     fun formatNumberTanpaKoma(amount: Double): String {
         return String.format("%,.0f", amount)
-    }
-
-    fun formatCurrencyTanpaKoma(nominal: Double, symbol: String): String {
-        val formatted = DecimalFormat("#,###").format(nominal)
-        return "$symbol$formatted"
     }
 
     fun setupCurrencyFormatter(editText: EditText) {
