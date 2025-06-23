@@ -44,9 +44,9 @@ A modern Android application built with **Kotlin**, **Room Database**, and **Jet
 
 <p float="left">
   <img src="screenshots/empty_homescreen.jpg" width="200"/>
-  <img src="screenshots/home_screen.jpg" width="200"/>
   <img src="screenshots/add_transaction_screen.jpg" width="200"/>
   <img src="screenshots/add_transaction_screen2.jpg" width="200"/>
+  <img src="screenshots/home_screen.jpg" width="200"/>
 </p>
 
 <p float="left">
@@ -85,7 +85,7 @@ Some of the main dependencies used in this project:
 
 1. **Clone this repository**
     ```bash
-    git clone https://github.com/your-username/geby-saldo.git
+    git clone https://github.com/gebyginting/geby-saldo.git
     cd geby-saldo
     ```
 
