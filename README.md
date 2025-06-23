@@ -1,4 +1,4 @@
-# Geby Saldo | Personal Finance Tracker 💰
+# Saldo+ | Personal Finance Tracker 💰
 
 A modern Android application built with **Kotlin**, **Room Database**, and **Jetpack DataStore** to help users manage their personal finances. Users can track income, expenses, and savings with an intuitive interface and visual insights.
 
